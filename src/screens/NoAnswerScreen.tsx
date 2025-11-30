@@ -1,87 +1,62 @@
 import React from 'react';
-import {
-  Image,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/types';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../navigation/types';
-import {palette, shadows} from '../theme/colors';
+import { palette } from '../theme/colors';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'NoAnswer'>;
 
-const NoAnswerScreen: React.FC<Props> = ({route}) => {
-  const {doctorName, doctorPhoto, specialization} = route.params;
+const NoAnswerScreen: React.FC<Props> = ({ navigation, route }) => {
+  const { doctorName, doctorPhoto, specialization } = route.params;
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" />
-
-      <View style={styles.container}>
-        {/* Doctor card */}
-        <View style={styles.doctorBlock}>
-          <Image source={{uri: doctorPhoto}} style={styles.avatar} />
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.navigate('DoctorList', { concernId: '1', concernLabel: 'General Physician' })}>
+          <MaterialCommunityIcons name="close" size={24} color={palette.text} />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.content}>
+        <View style={styles.centerContent}>
+          <Image source={{ uri: doctorPhoto }} style={styles.avatar} />
           <Text style={styles.doctorName}>{doctorName}</Text>
-          <Text style={styles.specialization}>
-            {specialization ?? 'Specialist'}
-          </Text>
-        </View>
+          <Text style={styles.specialization}>{specialization}</Text>
 
-        {/* No Answer text */}
-        <Text style={styles.noAnswerText}>No Answer</Text>
+          <Text style={styles.noAnswerText}>No Answer</Text>
 
-        {/* Bell info banner */}
-        <View style={styles.banner}>
-          <View style={styles.bannerIconWrapper}>
-            <MaterialCommunityIcons
-              name="bell-outline"
-              size={24}
-              color="#FFFFFF"
-            />
-          </View>
-          <View style={styles.bannerTextWrapper}>
-            <Text style={styles.bannerText}>
-              <Text style={styles.bold}>Tap</Text> on the{' '}
-              <Text style={styles.bold}>bell</Text> icon to get notified when{' '}
-              {doctorName} is <Text style={styles.bold}>online</Text>
+          <View style={styles.notificationCard}>
+            <MaterialCommunityIcons name="bell-ring" size={24} color="#3E6452" />
+            <Text style={styles.notificationText}>
+              Tap on the <Text style={{ fontWeight: '700' }}>bell</Text> icon to get notified when {doctorName} is online
             </Text>
           </View>
+
+          <View style={styles.dividerContainer}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>or</Text>
+            <View style={styles.dividerLine} />
+          </View>
         </View>
 
-        {/* OR divider */}
-        <View style={styles.orRow}>
-          <View style={styles.orLine} />
-          <Text style={styles.orText}>or</Text>
-          <View style={styles.orLine} />
-        </View>
-
-        {/* Bottom card */}
         <View style={styles.bottomCard}>
-          <Text style={styles.bottomText}>
-            Start a <Text style={styles.bold}>Chat Consultation</Text> with{' '}
-            {doctorName} or consult another expert now.
+          <Text style={styles.bottomCardText}>
+            Start a <Text style={{ color: '#3E6452', fontWeight: '600' }}>Chat Consultation</Text> with {doctorName} or consult another expert now.
           </Text>
 
-          <View style={styles.bottomButtonsRow}>
+          <View style={styles.buttonRow}>
             <TouchableOpacity
-              style={styles.moreExpertsButton}
-              onPress={() => {
-                // navigate to experts list
-              }}>
-              <Text style={styles.moreExpertsText}>See More Experts</Text>
+              style={styles.textButton}
+              onPress={() => navigation.navigate('DoctorList', { concernId: '1', concernLabel: 'General Physician' })}
+            >
+              <Text style={styles.textButtonLabel}>See More Experts</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.startChatButton}
-              onPress={() => {
-                // navigate to chat screen
-              }}>
-              <Text style={styles.startChatText}>Start Chat</Text>
+              style={styles.primaryButton}
+              onPress={() => { /* Navigate to Chat */ }}
+            >
+              <Text style={styles.primaryButtonLabel}>Start Chat</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -90,28 +65,30 @@ const NoAnswerScreen: React.FC<Props> = ({route}) => {
   );
 };
 
-export default NoAnswerScreen;
-
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: palette.background,
-  },
   container: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 40,
-    paddingBottom: 24,
-    justifyContent: 'space-between',
+    backgroundColor: '#fff',
   },
-  doctorBlock: {
+  header: {
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    zIndex: 1, // Ensure header is above content
+  },
+  content: {
+    flex: 1,
+    padding: 24,
+    justifyContent: 'space-between',
+    marginTop: -40, // Pull content up slightly to balance with header
+  },
+  centerContent: {
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 60,
   },
   avatar: {
-    width: 110,
-    height: 110,
-    borderRadius: 18,
+    width: 100,
+    height: 100,
+    borderRadius: 20,
     marginBottom: 16,
   },
   doctorName: {
@@ -121,104 +98,85 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   specialization: {
-    fontSize: 13,
+    fontSize: 14,
     color: palette.textMuted,
+    marginBottom: 24,
   },
   noAnswerText: {
-    marginTop: 24,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
-    color: '#2F6F3E',
-    textAlign: 'center',
+    color: '#E54E46', // Red color for No Answer
+    marginBottom: 32,
   },
-  banner: {
-    marginTop: 24,
+  notificationCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF6D9',
-    borderRadius: 32,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
+    backgroundColor: '#FFF8E1', // Light yellow bg
+    padding: 16,
+    borderRadius: 12,
+    gap: 12,
+    width: '100%',
   },
-  bannerIconWrapper: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#3A5D38',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  bannerTextWrapper: {
+  notificationText: {
     flex: 1,
-  },
-  bannerText: {
     fontSize: 13,
-    color: '#324C34',
+    color: '#5D4037',
+    lineHeight: 18,
   },
-  bold: {
-    fontWeight: '700',
-  },
-  orRow: {
-    marginTop: 40,
+  dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    width: '100%',
+    marginTop: 40,
+    gap: 16,
   },
-  orLine: {
+  dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#DDDDDD',
+    backgroundColor: '#E0E0E0',
   },
-  orText: {
-    marginHorizontal: 16,
-    fontSize: 13,
-    color: '#B0B0B0',
+  dividerText: {
+    fontSize: 14,
+    color: palette.textMuted,
   },
   bottomCard: {
-    marginTop: 40,
-    borderRadius: 24,
     borderWidth: 1,
     borderColor: '#E0E0E0',
-    paddingHorizontal: 20,
-    paddingVertical: 18,
-    backgroundColor: '#FFFFFF',
-    ...shadows.card,
-  },
-  bottomText: {
-    fontSize: 13,
-    textAlign: 'center',
-    color: palette.text,
+    borderRadius: 16,
+    padding: 20,
     marginBottom: 20,
   },
-  bottomButtonsRow: {
+  bottomCardText: {
+    fontSize: 14,
+    color: palette.text,
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 20,
+  },
+  buttonRow: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
-  moreExpertsButton: {
-    flex: 1,
-    borderRadius: 22,
-    borderWidth: 1,
-    borderColor: palette.primary,
-    paddingVertical: 10,
-    alignItems: 'center',
-    marginRight: 10,
+  textButton: {
+    padding: 10,
   },
-  moreExpertsText: {
+  textButtonLabel: {
     fontSize: 14,
-    color: palette.primary,
-    fontWeight: '600',
+    color: palette.textMuted,
+    fontWeight: '500',
   },
-  startChatButton: {
-    flex: 1,
-    borderRadius: 22,
-    backgroundColor: palette.primary,
+  primaryButton: {
+    backgroundColor: '#3E6452',
     paddingVertical: 10,
-    alignItems: 'center',
+    paddingHorizontal: 24,
+    borderRadius: 8,
   },
-  startChatText: {
-    fontSize: 14,
-    color: '#FFFFFF',
+  primaryButtonLabel: {
+    color: '#fff',
     fontWeight: '600',
+    fontSize: 14,
   },
 });
+
+export default NoAnswerScreen;

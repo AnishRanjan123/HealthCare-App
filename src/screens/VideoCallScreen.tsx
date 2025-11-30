@@ -2,9 +2,8 @@ import React, { useRef, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import ZegoUIKitPrebuiltCall, {
-  ONE_ON_ONE_VIDEO_CALL_CONFIG,
-} from '@zegocloud/zego-uikit-prebuilt-call-rn';
+// @ts-ignore
+import { ZegoUIKitPrebuiltCall, ONE_ON_ONE_VIDEO_CALL_CONFIG } from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import { zegoConfig } from '../services/zegoConfig';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'VideoCall'>;

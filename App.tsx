@@ -7,7 +7,7 @@ import TabNavigator from './src/navigation/TabNavigator';
 import DoctorListScreen from './src/screens/DoctorListScreen';
 import CallScreen from './src/screens/CallScreen';
 import VideoCallScreen from './src/screens/VideoCallScreen';
-import CallEndedScreen from './src/screens/CallEndedByConsumer';
+import CallEndedScreen from './src/screens/CallEndedScreen';
 import AppointmentDetailsScreen from './src/screens/AppointmentDetailsScreen';
 import CallDisconnectedScreen from './src/screens/CallDisconnectedScreen';
 import NoAnswerScreen from './src/screens/NoAnswerScreen';
