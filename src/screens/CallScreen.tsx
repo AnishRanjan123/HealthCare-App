@@ -81,7 +81,7 @@ const CallScreen: React.FC<Props> = ({ navigation, route }) => {
         appSign={zegoConfig.appSign}
         userID={userID}
         userName={userName}
-        callID={'call_' + doctorName.replace(/\s+/g, '')} // same callID on both sides
+        callID={'call_' + doctorName.replace(/\s+/g, '') + '_' + userID} // Unique callID per user/session to ensure fresh timer
         config={{
           ...ONE_ON_ONE_VIDEO_CALL_CONFIG,
           onOnlySelfInRoom: () => {
