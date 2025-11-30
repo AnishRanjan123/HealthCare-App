@@ -1,5 +1,5 @@
 import React, { useRef, useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image, Text } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 // @ts-ignore
@@ -25,16 +25,18 @@ const CallScreen: React.FC<Props> = ({ navigation, route }) => {
     if (lowBalanceTimerRef.current) clearTimeout(lowBalanceTimerRef.current);
   }, []);
 
+  const [isDoctorJoined, setIsDoctorJoined] = React.useState(false);
+  const [isCallEnded, setIsCallEnded] = React.useState(false);
+
   const goToEndScreen = useCallback(() => {
+    setIsCallEnded(true); // Hide overlay immediately
     clearTimers(); // CRITICAL: Stop auto-navigation timers when user manually ends call
-    setTimeout(() => {
-      navigation.navigate('CallEnded', {
-        doctorName,
-        doctorPhoto,
-        duration: '00:00',
-        amount: '₹ 0',
-      });
-    }, 2000); // 2-second delay for smoother transition
+    navigation.navigate('CallEnded', {
+      doctorName,
+      doctorPhoto,
+      duration: '00:00',
+      amount: '₹ 0',
+    });
   }, [navigation, doctorName, doctorPhoto, clearTimers]);
 
   const NO_ANSWER_TIMEOUT = 20000; // 20 seconds
@@ -90,8 +92,19 @@ const CallScreen: React.FC<Props> = ({ navigation, route }) => {
             goToEndScreen();
           },
           onHangUp: goToEndScreen,
+          onUserJoined: (user: any) => {
+            setIsDoctorJoined(true);
+          },
         }}
       />
+      {!isDoctorJoined && !isCallEnded && (
+        <View style={styles.ringingOverlay} pointerEvents="none">
+          <Text style={styles.ringingText}>Ringing...</Text>
+          <View style={styles.avatarContainer}>
+            <Image source={{ uri: doctorPhoto }} style={styles.ringingAvatar} />
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -102,5 +115,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  ringingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.3)', // Semi-transparent dark overlay
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  ringingText: {
+    position: 'absolute',
+    top: 100,
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#fff',
+    letterSpacing: 1,
+  },
+  avatarContainer: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.5)',
+    marginBottom: 50, // Move avatar up a bit (adjusted down)
+  },
+  ringingAvatar: {
+    width: '100%',
+    height: '100%',
   },
 });
