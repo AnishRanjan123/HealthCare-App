@@ -18,7 +18,7 @@ const VideoCallScreen: React.FC<Props> = ({ navigation, route }) => {
 
   const goToEndScreen = useCallback(() => {
     setTimeout(() => {
-      navigation.navigate('CallEnded', {
+      navigation.replace('CallEnded', {
         doctorName,
         doctorPhoto,
         duration: '00:00',
@@ -34,7 +34,7 @@ const VideoCallScreen: React.FC<Props> = ({ navigation, route }) => {
         appSign={zegoConfig.appSign}
         userID={userID}
         userName={userName}
-        callID={'call_' + doctorName.replace(/\s+/g, '') + '_' + userID} // Unique callID per user/session
+        callID={'call_' + doctorName.replace(/\s+/g, '')} // Deterministic callID for 2-way call testing
         config={{
           ...ONE_ON_ONE_VIDEO_CALL_CONFIG,
           onOnlySelfInRoom: goToEndScreen,

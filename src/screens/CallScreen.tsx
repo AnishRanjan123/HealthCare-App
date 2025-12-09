@@ -16,65 +16,22 @@ const CallScreen: React.FC<Props> = ({ navigation, route }) => {
   const userID = userIDRef.current;
   const userName = 'Patient ' + userID;
 
-  // Refs to hold timer IDs so we can clear them manually
-  const noAnswerTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lowBalanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const clearTimers = useCallback(() => {
-    if (noAnswerTimerRef.current) clearTimeout(noAnswerTimerRef.current);
-    if (lowBalanceTimerRef.current) clearTimeout(lowBalanceTimerRef.current);
-  }, []);
 
   const [isDoctorJoined, setIsDoctorJoined] = React.useState(false);
   const [isCallEnded, setIsCallEnded] = React.useState(false);
 
   const goToEndScreen = useCallback(() => {
     setIsCallEnded(true); // Hide overlay immediately
-    clearTimers(); // CRITICAL: Stop auto-navigation timers when user manually ends call
-    navigation.navigate('CallEnded', {
+    navigation.replace('CallEnded', {
       doctorName,
       doctorPhoto,
       duration: '00:00',
       amount: '₹ 0',
     });
-  }, [navigation, doctorName, doctorPhoto, clearTimers]);
-
-  const NO_ANSWER_TIMEOUT = 20000; // 20 seconds
-  const LOW_BALANCE_TIMEOUT = 30000; // 30 seconds
-
-  // Simulate No Answer (Doctor doesn't pick up)
-  React.useEffect(() => {
-    noAnswerTimerRef.current = setTimeout(() => {
-      // Navigate to NoAnswerScreen if call not "connected" (simulated by time)
-      // In a real app, we'd check connection state.
-      // For this demo, we'll assume if 20s passes, it's a no-answer.
-      navigation.navigate('NoAnswer', {
-        doctorName,
-        doctorPhoto,
-        specialization: 'General Physician', // Dummy data or pass from previous screen
-      });
-    }, NO_ANSWER_TIMEOUT);
-
-    return () => {
-      if (noAnswerTimerRef.current) clearTimeout(noAnswerTimerRef.current);
-    };
   }, [navigation, doctorName, doctorPhoto]);
 
-  // Simulate Low Balance (Disconnect after 30s)
-  React.useEffect(() => {
-    lowBalanceTimerRef.current = setTimeout(() => {
-      navigation.navigate('CallDisconnected', {
-        doctorName,
-        doctorPhoto,
-        duration: '00:30',
-        amount: '₹ 15',
-      });
-    }, LOW_BALANCE_TIMEOUT);
 
-    return () => {
-      if (lowBalanceTimerRef.current) clearTimeout(lowBalanceTimerRef.current);
-    };
-  }, [navigation, doctorName, doctorPhoto]);
 
   return (
     <View style={styles.container}>
@@ -83,7 +40,7 @@ const CallScreen: React.FC<Props> = ({ navigation, route }) => {
         appSign={zegoConfig.appSign}
         userID={userID}
         userName={userName}
-        callID={'call_' + doctorName.replace(/\s+/g, '') + '_' + userID} // Unique callID per user/session to ensure fresh timer
+        callID={'call_' + doctorName.replace(/\s+/g, '')} // Deterministic callID for 2-way call testing
         config={{
           ...ONE_ON_ONE_VIDEO_CALL_CONFIG,
           onOnlySelfInRoom: () => {
@@ -91,7 +48,14 @@ const CallScreen: React.FC<Props> = ({ navigation, route }) => {
             // For this flow, we might want to handle it differently, but for now keep it.
             goToEndScreen();
           },
-          onHangUp: goToEndScreen,
+          onHangUp: () => {
+            // onHangUp is triggered after confirmation or button press
+            goToEndScreen();
+          },
+          onHangUpConfirmation: () => {
+            // Return true to execute onHangUp immediately, or handle custom confirmation
+            return Promise.resolve(true);
+          },
           onUserJoined: (user: any) => {
             setIsDoctorJoined(true);
           },
@@ -100,6 +64,7 @@ const CallScreen: React.FC<Props> = ({ navigation, route }) => {
       {!isDoctorJoined && !isCallEnded && (
         <View style={styles.ringingOverlay} pointerEvents="none">
           <Text style={styles.ringingText}>Ringing...</Text>
+
           <View style={styles.avatarContainer}>
             <Image source={{ uri: doctorPhoto }} style={styles.ringingAvatar} />
           </View>
@@ -131,6 +96,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     letterSpacing: 1,
   },
+
   avatarContainer: {
     width: 150,
     height: 150,
