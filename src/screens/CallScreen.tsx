@@ -43,6 +43,27 @@ const CallScreen: React.FC<Props> = ({ navigation, route }) => {
     });
   }, [navigation, doctorName, doctorPhoto]);
 
+  const goToDisconnectedScreen = useCallback(() => {
+    setIsCallEnded(true);
+    navigation.replace('CallDisconnected', {
+      doctorName,
+      doctorPhoto,
+      duration: '00:00',
+      amount: '₹ 0',
+    });
+  }, [navigation, doctorName, doctorPhoto]);
+
+  // Timeout logic: if doctor hasn't joined within 20 seconds, disconnect
+  React.useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    if (!isDoctorJoined && !isCallEnded) {
+      timeout = setTimeout(() => {
+        goToDisconnectedScreen();
+      }, 20000);
+    }
+    return () => clearTimeout(timeout);
+  }, [isDoctorJoined, isCallEnded, goToDisconnectedScreen]);
+
 
 
   return (
