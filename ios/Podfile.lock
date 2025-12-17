@@ -1178,7 +1178,7 @@ PODS:
     - React-utils (= 0.74.5)
   - RNDeviceInfo (15.0.1):
     - React-Core
-  - RNGestureHandler (2.29.1):
+  - RNGestureHandler (2.16.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1216,27 +1216,6 @@ PODS:
     - React-NativeModulesApple
     - React-RCTFabric
     - React-RCTImage
-    - React-rendererdebug
-    - React-utils
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
-  - RNSound (0.12.0):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.01.01.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
     - React-rendererdebug
     - React-utils
     - ReactCommon/turbomodule/bridging
@@ -1339,7 +1318,6 @@ DEPENDENCIES:
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNScreens (from `../node_modules/react-native-screens`)
-  - RNSound (from `../node_modules/react-native-sound`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
   - "zego-uikit-prebuilt-call-rn (from `../node_modules/@zegocloud/zego-uikit-prebuilt-call-rn`)"
@@ -1476,8 +1454,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNScreens:
     :path: "../node_modules/react-native-screens"
-  RNSound:
-    :path: "../node_modules/react-native-sound"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   Yoga:
@@ -1547,9 +1523,8 @@ SPEC CHECKSUMS:
   React-utils: 9fa4e5d0b5e6c6c85c958f19d6ef854337886417
   ReactCommon: 9f285823dbe955099978d9bff65a7653ca029256
   RNDeviceInfo: 36d7f232bfe7c9b5c494cb7793230424ed32c388
-  RNGestureHandler: b040515a5b478bd49aea97a3379f93ea43046a84
+  RNGestureHandler: bf7e84b2e4b6dd9c77079c39c16a4ec59099c7ab
   RNScreens: ef68e50aea531dd00c592ba4683bbcb89d4d2e1a
-  RNSound: f217a285e75e52d035f60652e101526eb73a8050
   RNVectorIcons: 1b7e9f6a06b5572f3b4e313320b5e566def26c7f
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: 950bbfd7e6f04790fdb51149ed51df41f329fcc8
@@ -1559,6 +1534,6 @@ SPEC CHECKSUMS:
   ZegoUIKitReport: 36f4bc9a02a4fdd5d1eda1bf665b42c54cbbfd89
   ZIM: 6d5706e6a0ad3e6500ccacb8eede4324f878c195
 
-PODFILE CHECKSUM: fd4bb2383d2856071e6d98caa939925eca32f48b
+PODFILE CHECKSUM: bad411db25a5ab1378245229da7a9345d18246bb
 
 COCOAPODS: 1.16.2

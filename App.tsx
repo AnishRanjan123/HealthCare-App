@@ -36,7 +36,6 @@ function App(): React.JSX.Element {
             initialRouteName="MainTabs">
             <Stack.Screen name="MainTabs" component={TabNavigator} />
             <Stack.Screen name="DoctorList" component={DoctorListScreen} />
-
             <Stack.Screen name="VideoCall" component={VideoCallScreen} />
             <Stack.Screen name="CallEnded" component={CallEndedScreen} />
             <Stack.Screen

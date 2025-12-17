@@ -18,16 +18,28 @@ const CallScreen: React.FC<Props> = ({ navigation, route }) => {
 
 
 
+  // Track call start time
+  const startTimeRef = useRef<number | null>(null);
+
   const [isDoctorJoined, setIsDoctorJoined] = React.useState(false);
   const [isCallEnded, setIsCallEnded] = React.useState(false);
 
   const goToEndScreen = useCallback(() => {
     setIsCallEnded(true); // Hide overlay immediately
+    let durationStr = '00:00';
+    if (startTimeRef.current) {
+      const endTime = Date.now();
+      const diffSeconds = Math.floor((endTime - startTimeRef.current) / 1000);
+      const m = Math.floor(diffSeconds / 60);
+      const s = diffSeconds % 60;
+      durationStr = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+    }
+
     navigation.replace('CallEnded', {
       doctorName,
       doctorPhoto,
-      duration: '00:00',
-      amount: '₹ 0',
+      duration: durationStr,
+      amount: '₹ 0', // In real app, calculate based on duration
     });
   }, [navigation, doctorName, doctorPhoto]);
 
@@ -52,12 +64,11 @@ const CallScreen: React.FC<Props> = ({ navigation, route }) => {
             // onHangUp is triggered after confirmation or button press
             goToEndScreen();
           },
-          onHangUpConfirmation: () => {
-            // Return true to execute onHangUp immediately, or handle custom confirmation
-            return Promise.resolve(true);
-          },
           onUserJoined: (user: any) => {
             setIsDoctorJoined(true);
+            if (!startTimeRef.current) {
+              startTimeRef.current = Date.now();
+            }
           },
         }}
       />
