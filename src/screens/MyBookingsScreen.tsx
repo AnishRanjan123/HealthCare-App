@@ -10,12 +10,17 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { palette, shadows } from '../theme/colors';
 import { doctors } from '../constants/doctors';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'MyBookings'>;
+type Props = CompositeScreenProps<
+    NativeStackScreenProps<RootStackParamList, 'MyBookings'>,
+    BottomTabScreenProps<any>
+>;
 
 const MyBookingsScreen: React.FC<Props> = ({ navigation }) => {
     const insets = useSafeAreaInsets();
